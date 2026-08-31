@@ -39,6 +39,6 @@ es:
   index_name: data_agent
 
 llm:
-  model_name: Pro/zai-org/GLM-5.1
+  model_name: deepseek-chat
   api_key: ${oc.env:LLM_API_KEY}
-  base_url: https://api.siliconflow.cn/v1
+  base_url: https://api.deepseek.com

@@ -32,7 +32,7 @@
   </defs>
 
   <rect width="1280" height="960" fill="#f8fafc"/>
-  <text x="640" y="42" text-anchor="middle" class="title">电商问数系统架构图</text>
+  <text x="640" y="42" text-anchor="middle" class="title">校园消费智能分析系统架构图</text>
   <text x="640" y="70" text-anchor="middle" class="subtitle">两条主线：先构建元数据知识库，再用 LangGraph 串起 Jieba、Qdrant、Elasticsearch、MySQL、LLM 和 SSE 返回</text>
 
   <!-- 用户交互层 -->

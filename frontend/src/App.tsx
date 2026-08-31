@@ -7,26 +7,36 @@ import {
   BarChart3,
   Eraser,
   History,
-  Leaf,
+  School,
   MessageSquarePlus,
   Server,
+  Trash2,
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Composer } from "./components/Composer";
 import { EmptyState } from "./components/EmptyState";
 import { MessageBubble } from "./components/MessageBubble";
 import { streamQuery } from "./lib/agentApi";
-import { cn, summarizeResult } from "./lib/format";
+import { cn, formatTime, summarizeResult } from "./lib/format";
 import type { AgentEvent, ChatMessage, StepState } from "./types/agent";
 
 const examples = [
-  "统计 2025 年第一季度各大区的 GMV，并按 GMV 从高到低排序",
-  "统计 2025 年 3 月各商品品类的销量和销售额",
-  "查询华东地区 2025 年第一季度销售额最高的前 5 个商品",
-  "按会员等级统计 2025 年第一季度的订单数和销售额",
+  "统计 2025 年第一季度各校区的消费总额，并按金额从高到低排序",
+  "统计 2025 年 3 月各食堂的消费次数和消费总额",
+  "查询紫金港校区消费总额最高的前 5 个档口",
+  "按学院统计 2025 年第一季度的人均消费",
 ];
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "Vite /api proxy";
+const HISTORY_STORAGE_KEY = "campus-insight-agent-history";
+const MAX_HISTORY_SESSIONS = 30;
+
+type HistorySession = {
+  id: string;
+  title: string;
+  updatedAt: number;
+  messages: ChatMessage[];
+};
 
 function makeId() {
   return crypto.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(16).slice(2)}`;
@@ -46,6 +56,8 @@ export default function App() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [draft, setDraft] = useState("");
   const [activeController, setActiveController] = useState<AbortController | null>(null);
+  const [history, setHistory] = useState<HistorySession[]>([]);
+  const [historyLoaded, setHistoryLoaded] = useState(false);
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
   const isStreaming = Boolean(activeController);
@@ -55,6 +67,34 @@ export default function App() {
     () => messages.filter((message) => message.role === "assistant" && message.status === "done").length,
     [messages],
   );
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(HISTORY_STORAGE_KEY);
+      if (stored) setHistory(JSON.parse(stored) as HistorySession[]);
+    } catch {
+      localStorage.removeItem(HISTORY_STORAGE_KEY);
+    } finally {
+      setHistoryLoaded(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!historyLoaded || messages.length === 0) return;
+    const firstQuestion = messages.find((message) => message.role === "user")?.content;
+    if (!firstQuestion) return;
+    const session: HistorySession = {
+      id: messages[0]?.id ?? makeId(),
+      title: firstQuestion,
+      updatedAt: Date.now(),
+      messages,
+    };
+    setHistory((current) => {
+      const next = [session, ...current.filter((item) => item.id !== session.id)].slice(0, MAX_HISTORY_SESSIONS);
+      localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(next));
+      return next;
+    });
+  }, [messages, historyLoaded]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({
@@ -159,21 +199,34 @@ export default function App() {
     setDraft("");
   };
 
+  const openHistory = (session: HistorySession) => {
+    if (isStreaming) return;
+    setMessages(session.messages);
+    setDraft("");
+  };
+
+  const clearHistory = () => {
+    if (isStreaming || history.length === 0) return;
+    if (!window.confirm("确定清空全部历史会话吗？")) return;
+    setHistory([]);
+    localStorage.removeItem(HISTORY_STORAGE_KEY);
+  };
+
   return (
     <div className="h-dvh overflow-hidden bg-parchment text-ink">
       <div className="pointer-events-none fixed inset-0 bg-[linear-gradient(90deg,rgba(32,32,29,0.045)_1px,transparent_1px),linear-gradient(rgba(32,32,29,0.035)_1px,transparent_1px)] bg-[size:48px_48px]" />
       <div className="pointer-events-none fixed inset-0 grain" />
 
       <div className="relative grid h-full min-h-0 overflow-hidden lg:grid-cols-[300px_minmax(0,1fr)]">
-        <aside className="hidden min-h-0 border-r border-ink/10 bg-[#efe6d8]/85 backdrop-blur lg:flex lg:flex-col">
+        <aside className="hidden min-h-0 border-r border-ink/10 bg-[#e8f1f7]/90 backdrop-blur lg:flex lg:flex-col">
           <div className="border-b border-ink/10 px-5 py-5">
             <div className="flex items-center gap-3">
-              <div className="grid h-10 w-10 place-items-center bg-ink text-parchment">
-                <BarChart3 className="h-5 w-5" aria-hidden="true" />
+              <div className="grid h-10 w-10 place-items-center bg-moss text-white">
+                <School className="h-5 w-5" aria-hidden="true" />
               </div>
               <div>
-                <div className="text-base font-semibold tracking-[0.02em]">电商问数</div>
-                <div className="text-xs text-ink/50">shopkeeper-agent</div>
+                <div className="text-base font-semibold tracking-[0.02em]">校园消费分析</div>
+                <div className="text-xs text-ink/50">campus-insight-agent</div>
               </div>
             </div>
           </div>
@@ -190,6 +243,47 @@ export default function App() {
             </button>
 
             <section>
+              <div className="mb-2 flex items-center justify-between px-1 text-xs font-semibold uppercase tracking-[0.16em] text-ink/45">
+                <span className="inline-flex items-center gap-2">
+                  <History className="h-3.5 w-3.5" aria-hidden="true" />
+                  历史会话
+                </span>
+                {history.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={clearHistory}
+                    disabled={isStreaming}
+                    className="inline-flex items-center gap-1 text-[11px] normal-case tracking-normal text-ink/40 transition hover:text-tomato disabled:opacity-40"
+                    title="清空历史"
+                  >
+                    <Trash2 className="h-3 w-3" aria-hidden="true" />
+                    清空
+                  </button>
+                )}
+              </div>
+              {history.length === 0 ? (
+                <div className="border border-dashed border-ink/10 px-3 py-3 text-xs leading-5 text-ink/40">
+                  完成一次查询后，会自动保存到这里。
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {history.map((session) => (
+                    <button
+                      key={session.id}
+                      type="button"
+                      disabled={isStreaming}
+                      onClick={() => openHistory(session)}
+                      className="w-full border border-ink/10 bg-white/55 px-3 py-2 text-left transition hover:border-moss/35 hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-55"
+                    >
+                      <div className="line-clamp-2 text-sm leading-5 text-ink/75">{session.title}</div>
+                      <div className="mt-1 text-[11px] text-ink/35">{formatTime(session.updatedAt)}</div>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </section>
+
+            <section>
               <div className="mb-2 flex items-center gap-2 px-1 text-xs font-semibold uppercase tracking-[0.16em] text-ink/45">
                 <History className="h-3.5 w-3.5" aria-hidden="true" />
                 样例
@@ -201,7 +295,7 @@ export default function App() {
                     type="button"
                     disabled={isStreaming}
                     onClick={() => startQuery(example)}
-                    className="w-full border border-ink/10 bg-white/42 px-3 py-3 text-left text-sm leading-5 text-ink/75 transition hover:border-moss/35 hover:bg-white/75 disabled:cursor-not-allowed disabled:opacity-55"
+                    className="w-full border border-ink/10 bg-white/60 px-3 py-3 text-left text-sm leading-5 text-ink/75 transition hover:border-moss/35 hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-55"
                   >
                     {example}
                   </button>
@@ -237,7 +331,7 @@ export default function App() {
                 <BarChart3 className="h-4 w-4" aria-hidden="true" />
               </div>
               <div className="min-w-0">
-                <div className="truncate text-sm font-semibold text-ink">智能数据分析 Agent</div>
+                <div className="truncate text-sm font-semibold text-ink">校园消费智能分析 Agent</div>
                 <div className="truncate text-xs text-ink/45">FastAPI SSE / LangGraph</div>
               </div>
             </div>
@@ -267,9 +361,9 @@ export default function App() {
             )}
           </div>
 
-          <div className="border-t border-ink/10 bg-[#efe6d8]/45 px-4 py-2 text-center text-xs text-ink/45">
+          <div className="border-t border-ink/10 bg-[#e8f1f7]/65 px-4 py-2 text-center text-xs text-ink/45">
             <span className="inline-flex items-center gap-2">
-              <Leaf className="h-3.5 w-3.5 text-moss" aria-hidden="true" />
+              <School className="h-3.5 w-3.5 text-moss" aria-hidden="true" />
               {isStreaming ? "运行中" : "就绪"}
             </span>
           </div>
@@ -280,6 +374,7 @@ export default function App() {
             onChange={setDraft}
             onSubmit={() => startQuery()}
             onStop={stopQuery}
+            suggestions={examples}
           />
         </main>
       </div>

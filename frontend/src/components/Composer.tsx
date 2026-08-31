@@ -3,7 +3,7 @@
  * 处理问题输入、发送和停止当前流式请求
  */
 import { ArrowUp, Square, WandSparkles } from "lucide-react";
-import { FormEvent, KeyboardEvent, useRef } from "react";
+import { FormEvent, KeyboardEvent, useRef, useState } from "react";
 import { cn } from "../lib/format";
 
 type ComposerProps = {
@@ -13,6 +13,7 @@ type ComposerProps = {
     onChange: (value: string) => void;
     onSubmit: () => void;
     onStop: () => void;
+    suggestions: string[];
 };
 
 export function Composer({
@@ -22,8 +23,17 @@ export function Composer({
     onChange,
     onSubmit,
     onStop,
+    suggestions,
 }: ComposerProps) {
     const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+    const [suggestionIndex, setSuggestionIndex] = useState(0);
+
+    const useSuggestion = () => {
+        if (isStreaming || suggestions.length === 0) return;
+        onChange(suggestions[suggestionIndex % suggestions.length]);
+        setSuggestionIndex((current) => (current + 1) % suggestions.length);
+        textareaRef.current?.focus();
+    };
 
     const submit = (event: FormEvent) => {
         event.preventDefault();
@@ -43,16 +53,23 @@ export function Composer({
             className="border-t border-ink/10 bg-parchment/80 px-4 py-4 backdrop-blur"
         >
             <div className="mx-auto flex max-w-5xl items-end gap-3 border border-ink/15 bg-white/75 p-2 shadow-panel">
-                <div className="hidden h-11 w-11 shrink-0 place-items-center bg-moss/10 text-moss sm:grid">
+                <button
+                    type="button"
+                    onClick={useSuggestion}
+                    disabled={isStreaming || suggestions.length === 0}
+                    className="hidden h-11 w-11 shrink-0 place-items-center bg-moss/10 text-moss transition hover:bg-moss/20 focus:outline-none focus:ring-2 focus:ring-moss/40 disabled:cursor-not-allowed disabled:opacity-45 sm:grid"
+                    title="填入示例问题"
+                    aria-label="填入示例问题"
+                >
                     <WandSparkles className="h-5 w-5" aria-hidden="true" />
-                </div>
+                </button>
                 <textarea
                     ref={textareaRef}
                     value={value}
                     onChange={(event) => onChange(event.target.value)}
                     onKeyDown={onKeyDown}
                     rows={1}
-                    placeholder="问一个电商数据问题..."
+                    placeholder="问一个校园消费数据问题..."
                     className="max-h-36 min-h-11 flex-1 resize-none bg-transparent px-2 py-3 text-[15px] leading-6 text-ink outline-none placeholder:text-ink/35"
                 />
                 <button

@@ -1,176 +1,84 @@
 tables:
-  - name: dim_region
+  - name: dim_student
     role: dim
-    description: 地区维度表，用于描述订单发生的地理区域信息。
+    description: 学生维度表，记录学生学院、年级和学生类型等属性。
     columns:
-      - name: region_id
-        role: primary_key
-        description: 地区唯一标识。
-        alias: [地区ID, 区域ID]
-        sync: false
-
-      - name: province
-        role: dimension
-        description: 订单所属的省份名称。
-        alias: [省份, 省, 所在省份]
-        sync: true
-
-      - name: region_name
-        role: dimension
-        description: 订单所属的大区名称，如华东、华南等。
-        alias: [地区, 区域, 大区]
-        sync: true
-
-      - name: country
-        role: dimension
-        description: 地区所属国家名称。
-        alias: [国家, 国家名称]
-        sync: true
-
-  - name: dim_customer
+      - {name: student_id, role: primary_key, description: 学生唯一标识, alias: [学生ID, 用户ID], sync: false}
+      - {name: student_name, role: dimension, description: 学生姓名, alias: [姓名], sync: true}
+      - {name: gender, role: dimension, description: 学生性别, alias: [性别], sync: true}
+      - {name: college, role: dimension, description: 学生所属学院, alias: [学院, 院系], sync: true}
+      - {name: grade, role: dimension, description: 学生年级, alias: [年级], sync: true}
+      - {name: student_type, role: dimension, description: 学生类型，如本科生、研究生, alias: [学生类别, 培养层次], sync: true}
+  - name: dim_canteen
     role: dim
-    description: 客户维度表，描述下单客户的基本属性。
+    description: 食堂维度表，描述食堂名称、校区和楼层。
     columns:
-      - name: customer_id
-        role: primary_key
-        description: 客户唯一标识。
-        alias: [客户ID, 用户ID]
-        sync: false
-
-      - name: customer_name
-        role: dimension
-        description: 客户名称。
-        alias: [客户名称, 用户名称]
-        sync: true
-
-      - name: gender
-        role: dimension
-        description: 客户性别。
-        alias: [性别]
-        sync: true
-
-      - name: member_level
-        role: dimension
-        description: 客户会员等级。
-        alias: [会员等级, 用户等级]
-        sync: true
-
-  - name: dim_product
+      - {name: canteen_id, role: primary_key, description: 食堂唯一标识, alias: [食堂ID], sync: false}
+      - {name: canteen_name, role: dimension, description: 食堂名称, alias: [食堂], sync: true}
+      - {name: campus, role: dimension, description: 食堂所属校区, alias: [校区, 校园], sync: true}
+      - {name: floor, role: dimension, description: 食堂所在楼层, alias: [楼层], sync: true}
+      - {name: opening_year, role: dimension, description: 食堂开业年份, alias: [开业年份], sync: false}
+  - name: dim_stall
     role: dim
-    description: 商品维度表，描述商品的基本属性信息。
+    description: 食堂档口维度表，描述档口、菜品类别和所属校区。
     columns:
-      - name: product_id
-        role: primary_key
-        description: 商品唯一标识。
-        alias: [商品ID, 产品ID]
-        sync: false
-
-      - name: product_name
-        role: dimension
-        description: 商品名称。
-        alias: [商品名称, 产品名称]
-        sync: true
-
-      - name: category
-        role: dimension
-        description: 商品所属品类。
-        alias: [商品类别, 品类, 分类]
-        sync: true
-
-      - name: brand
-        role: dimension
-        description: 商品品牌名称。
-        alias: [品牌, 品牌名称]
-        sync: true
-
+      - {name: stall_id, role: primary_key, description: 档口唯一标识, alias: [档口ID], sync: false}
+      - {name: stall_name, role: dimension, description: 档口名称, alias: [档口, 店铺], sync: true}
+      - {name: canteen_id, role: foreign_key, description: 所属食堂外键, alias: [食堂ID], sync: false}
+      - {name: category, role: dimension, description: 菜品类别, alias: [类别, 餐饮类型], sync: true}
+      - {name: brand, role: dimension, description: 档口品牌或经营主体, alias: [品牌], sync: true}
+      - {name: campus, role: dimension, description: 档口所属校区, alias: [校区], sync: true}
   - name: dim_date
     role: dim
-    description: 时间维度表，用于多时间粒度分析。
+    description: 日期维度表，用于按年、季度、月份和星期分析消费。
     columns:
-      - name: date_id
-        role: primary_key
-        description: 日期唯一标识，格式 yyyyMMdd。
-        alias: [日期ID, 日期]
-        sync: false
-
-      - name: year
-        role: dimension
-        description: 年份。
-        alias: [年, 年份]
-        sync: false
-
-      - name: quarter
-        role: dimension
-        description: 季度。
-        alias: [季度]
-        sync: true
-
-      - name: month
-        role: dimension
-        description: 月份。
-        alias: [月, 月份]
-        sync: false
-
-      - name: day
-        role: dimension
-        description: 日。
-        alias: [日, 天]
-        sync: false
-
-  - name: fact_order
+      - {name: date_id, role: primary_key, description: 日期唯一标识, alias: [日期ID, 日期], sync: false}
+      - {name: year, role: dimension, description: 年份, alias: [年], sync: false}
+      - {name: quarter, role: dimension, description: 季度, alias: [季度], sync: true}
+      - {name: month, role: dimension, description: 月份, alias: [月], sync: false}
+      - {name: day, role: dimension, description: 日期中的日, alias: [日], sync: false}
+      - {name: week, role: dimension, description: 年内周数, alias: [周], sync: false}
+      - {name: day_of_week, role: dimension, description: 星期几, alias: [星期], sync: true}
+      - {name: holiday_flag, role: dimension, description: 是否节假日, alias: [节假日], sync: true}
+  - name: fact_consumption
     role: fact
-    description: 订单事实表，记录订单数量和金额等核心指标。
+    description: 校园消费事实表，记录学生在食堂档口的消费金额、数量、餐次和支付方式。
     columns:
-      - name: order_id
-        role: primary_key
-        description: 订单唯一标识。
-        alias: [订单ID]
-        sync: false
-
-      - name: customer_id
-        role: foreign_key
-        description: 关联客户维度的外键。
-        alias: [客户ID, 用户ID]
-        sync: false
-
-      - name: product_id
-        role: foreign_key
-        description: 关联商品维度的外键。
-        alias: [商品ID, 产品ID]
-        sync: false
-
-      - name: date_id
-        role: foreign_key
-        description: 关联时间维度的外键。
-        alias: [日期, 下单日期]
-        sync: false
-
-      - name: region_id
-        role: foreign_key
-        description: 关联地区维度的外键。
-        alias: [地区ID, 区域ID]
-        sync: false
-
-      - name: order_quantity
-        role: measure
-        description: 订单中商品的购买数量。
-        alias: [销量, 购买数量, 件数]
-        sync: false
-
-      - name: order_amount
-        role: measure
-        description: 订单金额。
-        alias: [销售额, 订单金额, 收入]
-        sync: false
-
+      - {name: consumption_id, role: primary_key, description: 消费记录唯一标识, alias: [消费ID, 订单ID], sync: false}
+      - {name: student_id, role: foreign_key, description: 消费学生外键, alias: [学生ID], sync: false}
+      - {name: stall_id, role: foreign_key, description: 消费档口外键, alias: [档口ID], sync: false}
+      - {name: date_id, role: foreign_key, description: 消费日期外键, alias: [日期, 消费时间], sync: false}
+      - {name: quantity, role: measure, description: 本次消费购买份数, alias: [数量, 份数], sync: false}
+      - {name: amount, role: measure, description: 本次消费金额，单位为元, alias: [消费金额, 金额, 营业额], sync: false}
+      - {name: payment_method, role: dimension, description: 支付方式，如校园卡、微信、支付宝, alias: [支付方式], sync: true}
+      - {name: meal_type, role: dimension, description: 餐次，如早餐、午餐、晚餐, alias: [餐次, 用餐时段], sync: true}
+      - {name: refund_flag, role: dimension, description: 是否退款，1表示退款, alias: [退款, 退单], sync: true}
 metrics:
-  - name: GMV
-    description: 全称Gross Merchandise Value，表示所有订单的成交金额总和。
-    relevant_columns:
-      - fact_order.order_amount
-    alias: [成交总额, 订单总额]
-  - name: AOV
-    description: 全称Average Order Value，表示所有订单的成交金额平均值。
-    relevant_columns:
-      - fact_order.order_quantity
-    alias: [平均单价, 平均订单金额]
+  - name: 消费总额
+    description: 所有消费记录金额的总和，单位为元。
+    relevant_columns: [fact_consumption.amount]
+    alias: [消费金额, 营业额, 总消费]
+  - name: 消费次数
+    description: 消费记录的数量，表示交易笔数。
+    relevant_columns: [fact_consumption.consumption_id]
+    alias: [订单数, 交易笔数, 消费笔数]
+  - name: 消费人数
+    description: 发生过消费的去重学生人数。
+    relevant_columns: [fact_consumption.student_id]
+    alias: [用餐人数, 活跃消费者]
+  - name: 消费份数
+    description: 消费记录中购买份数的总和。
+    relevant_columns: [fact_consumption.quantity]
+    alias: [销量, 购买数量, 售出份数]
+  - name: 平均客单价
+    description: 消费总额除以消费次数，表示每笔交易平均金额。
+    relevant_columns: [fact_consumption.amount, fact_consumption.consumption_id]
+    alias: [客单价, 平均消费金额]
+  - name: 人均消费
+    description: 消费总额除以消费人数，表示每位学生平均消费金额。
+    relevant_columns: [fact_consumption.amount, fact_consumption.student_id]
+    alias: [人均金额, 平均消费]
+  - name: 退款率
+    description: 退款消费记录数除以消费次数。
+    relevant_columns: [fact_consumption.refund_flag, fact_consumption.consumption_id]
+    alias: [退单率]

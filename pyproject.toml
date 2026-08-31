@@ -1,7 +1,7 @@
 [project]
-name = "shopkeeper-agent"
+name = "campus-insight-agent"
 version = "0.1.0"
-description = "Add your description here"
+description = "校园消费智能分析 Agent：基于 LangGraph 的自然语言问数系统"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [

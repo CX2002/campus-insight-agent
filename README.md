@@ -1,6 +1,6 @@
 <div align='center'>
-  <h1 style="margin-top: 15px;">「电商问数」智能数据分析 Agent</h1>
-  <h4><b>shopkeeper-agent</b></h4>
+  <h1 style="margin-top: 15px;">「校园消费」智能分析 Agent</h1>
+  <h4><b>campus-insight-agent</b></h4>
   <p><em>可能是全网最适合用于系统学习 LangGraph 的智能问数实战项目，配套系统性文字教程与对应章节分支，带你打通混合检索、多阶段推理、SQL 生成与执行全链路</em></p>
 </div>
 
@@ -16,22 +16,22 @@
 
 **📢 说明**：本套实战项目已更新完成，配套教程、章节分支和前后端代码均可对照学习。
 
-如果你正在找一个适合学习 `LangGraph`、`Qdrant`、`MySQL`、`FastAPI` 和 AI Agent 工程开发的实战项目，「电商问数」很可能是最适合你的项目。
+这是一个面向校园消费与食堂运营场景的自然语言问数 Agent，适合学习 `LangGraph`、`Qdrant`、`MySQL`、`FastAPI` 和 AI Agent 工程开发。
 
-它不是只调用一次大模型接口，也不是写几个 Prompt 演示 SQL 生成结果。这个项目围绕电商数仓问数场景，先构建元数据知识库，再做字段、指标、字段取值的混合检索，随后用 LangGraph 编排多阶段问数流程，完成 SQL 生成、校验、修正、执行和前端流式展示。换句话说，你学到的不是某一个框架 API，而是一条 AI 应用从数据准备、检索增强、智能体编排、接口交付到前端联调的完整项目主线。
+系统围绕校园消费数仓，先构建学生、食堂、档口、日期和消费记录的元数据知识库，再做字段、指标、字段取值的混合检索，随后用 LangGraph 编排多阶段问数流程，完成 SQL 生成、校验、修正、执行和前端流式展示。
 
-> 本套仓库是 [ai-agents-from-zero](https://github.com/didilili/ai-agents-from-zero) 教程体系中的 [实战项目-电商问数](https://github.com/didilili/ai-agents-from-zero/tree/main/%E5%AE%9E%E6%88%98%E9%A1%B9%E7%9B%AE-%E7%94%B5%E5%95%86%E9%97%AE%E6%95%B0) 配套源码仓库，除了可直接运行和二次开发的项目代码之外，也提供了与教程章节对应的 Git 分支演进过程，以及完整的在线图文讲义入口。
+> 本项目是在开源问数 Agent 教程基础上完成的校园消费场景改造，保留原项目的工程链路，并针对校园消费数仓补充了业务数据与界面设计。
 > 如果你想系统学习「AI智能体 大模型应用开发」，也可直接从系统教程 [AI 智能体实战速成指南-大模型入门](https://didilili.github.io/ai-agents-from-zero/#/) 开始。
 
-![电商问数前端首页：样例问题、自然语言输入和智能数据分析 Agent 界面](docs/images/shopkeeper-agent-home.jpg)
+![校园消费智能分析 Agent 前端首页：样例问题、自然语言输入和分析流程界面](docs/images/shopkeeper-agent-home.jpg)
 
 ## 📖 项目介绍
 
 在真实问数场景里，业务同学通常不会写 SQL，数据分析同学也很难随时记住所有表结构、字段含义、指标口径和字段取值。单纯把自然语言问题直接交给大模型，很容易出现表选错、字段选错、指标理解错和 SQL 幻觉等问题。
 
-`电商问数` 要解决的就是这个问题：
+`校园消费智能分析 Agent` 要解决的就是这个问题：
 
-- 用户用自然语言提问
+- 用户用自然语言提问校园消费问题
 - 系统自动召回相关字段、指标和字段取值
 - 大模型基于上下文进行分步推理
 - 生成 SQL 并查询数据仓库
@@ -65,7 +65,7 @@
 
 ## 🏗️ 系统架构
 
-![电商问数系统架构图：前端通过 FastAPI 和 SSE 连接后端，LangGraph 问数智能体基于 Jieba、MySQL、Qdrant、Elasticsearch 和 LLM 完成召回、SQL 生成校验执行与结果返回](docs/images/shopkeeper-agent-system-architecture.svg)
+![校园消费智能分析系统架构图：前端通过 FastAPI 和 SSE 连接后端，LangGraph Agent 基于 Jieba、MySQL、Qdrant、Elasticsearch 和 LLM 完成召回、SQL 生成校验执行与结果返回](docs/images/shopkeeper-agent-system-architecture.svg)
 
 项目围绕两条主线展开：
 
@@ -74,7 +74,7 @@
 | 元数据知识库构建 | 抽取教学数仓中的表、字段、指标和字段取值，写入结构化库、向量库和全文索引 | `MySQL` / `Qdrant` / `Elasticsearch` / `TEI` |
 | 自然语言问数     | 基于用户问题完成召回、上下文整理、SQL 生成校验执行，并把过程流式返回前端 | `LangGraph` / `FastAPI` / `SSE` / `React`    |
 
-![电商问数查询结果页：LangGraph 执行流程、SQL 校验执行和查询结果表格](docs/images/shopkeeper-agent-query-result.jpg)
+![校园消费查询结果页：LangGraph 执行流程、SQL 校验执行和查询结果表格](docs/images/shopkeeper-agent-query-result.jpg)
 
 ## 🛠️ 项目技术栈
 
@@ -153,13 +153,13 @@ cp .env.example .env
 LLM_API_KEY=your_real_api_key
 ```
 
-默认配置使用兼容 OpenAI 接口的硅基流动服务：
+默认配置使用兼容 OpenAI 接口的大模型服务（当前示例为 DeepSeek）：
 
 ```yaml
 llm:
-    model_name: Pro/zai-org/GLM-5.1
+    model_name: deepseek-chat
     api_key: ${oc.env:LLM_API_KEY}
-    base_url: https://api.siliconflow.cn/v1
+    base_url: https://api.deepseek.com
 ```
 
 如需使用其他兼容 OpenAI API 的模型平台，修改 [conf/app_config.yaml](conf/app_config.yaml) 中的 `model_name` 和 `base_url`。
@@ -212,11 +212,11 @@ uv run fastapi dev main.py
 POST http://127.0.0.1:8000/api/query
 ```
 
-请求示例：
+请求示例（校园消费）：
 
 ```json
 {
-    "query": "统计华北地区的销售总额"
+    "query": "统计 2025 年第一季度各校区的消费总额"
 }
 ```
 
@@ -249,7 +249,7 @@ VITE_DEV_PROXY_TARGET=http://127.0.0.1:8000
 
 ## 📚 配套教程目录
 
-教程总入口：[电商问数完整教程](https://didilili.github.io/ai-agents-from-zero/#/%E5%AE%9E%E6%88%98%E9%A1%B9%E7%9B%AE-%E7%94%B5%E5%95%86%E9%97%AE%E6%95%B0/0-%E5%89%8D%E8%A8%80)
+教程总入口：[AI Agent 问数教程](https://didilili.github.io/ai-agents-from-zero/#/)
 
 | 章节 | 标题                                                                                                                                                                                                                                                                              | 学习重点                                                                 | 对应分支                           |
 | ---- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ | ---------------------------------- |
@@ -295,4 +295,4 @@ git checkout main
 - 监控告警、链路追踪平台和灰度发布
 - 更复杂的多轮问数记忆、追问改写和会话管理
 
-这些能力适合在基础流程跑通之后继续扩展。`shopkeeper-agent` 更适合承担一个清晰角色：先把智能问数最关键、最必要、最值得学习的工程链路讲清楚、跑起来，并为后续扩展企业级能力打基础。
+这些能力适合在基础流程跑通之后继续扩展。`campus-insight-agent` 当前聚焦校园消费分析的完整工程链路，可继续扩展权限、可视化和运营预警等能力。

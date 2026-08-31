@@ -41,7 +41,7 @@ export function ResultTable({ data }: { data: unknown }) {
 
   return (
     <section className="mt-4 overflow-hidden border border-ink/10 bg-white/70 shadow-line">
-      <div className="flex items-center justify-between border-b border-ink/10 px-4 py-3">
+      <div className="flex items-center justify-between border-b border-ink/10 bg-mist/35 px-4 py-3">
         <div className="flex items-center gap-2 text-sm font-semibold text-ink">
           <Database className="h-4 w-4 text-moss" aria-hidden="true" />
           查询结果
@@ -53,7 +53,7 @@ export function ResultTable({ data }: { data: unknown }) {
       </div>
       <div className="max-h-[360px] overflow-auto">
         <table className="min-w-full border-separate border-spacing-0 text-left text-sm">
-          <thead className="sticky top-0 z-10 bg-[#efe6d8]">
+          <thead className="sticky top-0 z-10 bg-mist/70">
             <tr>
               {columns.map((column) => (
                 <th

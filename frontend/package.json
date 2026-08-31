@@ -1,6 +1,6 @@
 {
-  "name": "shopkeeper-agent-frontend",
-  "description": "电商问数智能体前端项目，提供聊天式问数界面和 SSE 流程展示。",
+  "name": "campus-insight-agent-frontend",
+  "description": "校园消费智能分析 Agent 前端，提供聊天式问数界面和 SSE 流程展示。",
   "private": true,
   "version": "0.1.0",
   "type": "module",

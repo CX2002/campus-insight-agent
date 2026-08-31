@@ -26,7 +26,7 @@ body,
 
 body {
     margin: 0;
-    background: #f7f1e8;
+    background: #f4f7fb;
     overflow: hidden;
 }
 
@@ -43,7 +43,7 @@ textarea {
     opacity: 0.32;
     background-image: radial-gradient(
         circle at 1px 1px,
-        rgba(32, 32, 29, 0.18) 1px,
+        rgba(19, 124, 139, 0.14) 1px,
         transparent 0
     );
     background-size: 18px 18px;
