@@ -11,5 +11,5 @@ from pydantic import BaseModel
 class QuerySchema(BaseModel):
     """`/api/query` 请求体，承载用户输入的自然语言问题"""
 
-    # 前端请求体中的 query 字段，例如 {"query": "统计华北地区销售额"}
+    # 前端请求体中的 query 字段，例如 {"query": "统计紫金港校区消费总额"}
     query: str

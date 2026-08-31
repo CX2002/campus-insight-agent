@@ -64,12 +64,12 @@ if __name__ == "__main__":
     async def test():
         """执行一次简单查询，验证 MySQL 连接与结果结构"""
         async with dw_mysql_client_manager.session_factory() as session:
-            sql = "select * from fact_order limit 10"
+            sql = "select * from fact_consumption limit 10"
             result = await session.execute(text(sql))
             # mappings().fetchall() 会把结果转成“按列名访问”的行对象列表
             rows = result.mappings().fetchall()
             print(type(rows))
             print(type(rows[0]))
-            print(rows[0]["order_id"])
+            print(rows[0]["consumption_id"])
 
     asyncio.run(test())

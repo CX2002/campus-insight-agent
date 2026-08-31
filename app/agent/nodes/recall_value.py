@@ -2,7 +2,7 @@
 字段取值召回节点
 
 负责从字段值全文索引中召回候选取值
-当用户问题里出现店铺名 类目名 地区名等业务值时，这一步可以帮助定位真实字段和值
+当用户问题里出现校区名 食堂名 学院名等业务值时，这一步可以帮助定位真实字段和值
 实现路径和字段/指标召回不同：关键词扩展 -> Elasticsearch 全文检索 -> ValueInfo 去重
 """
 
@@ -33,7 +33,7 @@ async def recall_value(state: DataAgentState, runtime: Runtime[DataAgentContext]
         value_es_repository = runtime.context["value_es_repository"]
 
         # 用 LLM 把用户问法扩展成“可能出现在字段值里的词”
-        # 例如“华北地区”可以补充出“华北”，避免 SQL 条件值和真实存储值不一致
+        # 例如“紫金港校区”可以补充出“紫金港”，避免 SQL 条件值和真实存储值不一致
         prompt = PromptTemplate(
             template=load_prompt("extend_keywords_for_value_recall"),
             input_variables=["query"],

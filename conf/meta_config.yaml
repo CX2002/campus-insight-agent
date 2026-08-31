@@ -23,7 +23,7 @@ tables:
     description: 食堂档口维度表，描述档口、菜品类别和所属校区。
     columns:
       - {name: stall_id, role: primary_key, description: 档口唯一标识, alias: [档口ID], sync: false}
-      - {name: stall_name, role: dimension, description: 档口名称, alias: [档口, 店铺], sync: true}
+      - {name: stall_name, role: dimension, description: 档口名称, alias: [档口, 窗口], sync: true}
       - {name: canteen_id, role: foreign_key, description: 所属食堂外键, alias: [食堂ID], sync: false}
       - {name: category, role: dimension, description: 菜品类别, alias: [类别, 餐饮类型], sync: true}
       - {name: brand, role: dimension, description: 档口品牌或经营主体, alias: [品牌], sync: true}
@@ -44,7 +44,7 @@ tables:
     role: fact
     description: 校园消费事实表，记录学生在食堂档口的消费金额、数量、餐次和支付方式。
     columns:
-      - {name: consumption_id, role: primary_key, description: 消费记录唯一标识, alias: [消费ID, 订单ID], sync: false}
+      - {name: consumption_id, role: primary_key, description: 消费记录唯一标识, alias: [消费ID, 消费记录ID], sync: false}
       - {name: student_id, role: foreign_key, description: 消费学生外键, alias: [学生ID], sync: false}
       - {name: stall_id, role: foreign_key, description: 消费档口外键, alias: [档口ID], sync: false}
       - {name: date_id, role: foreign_key, description: 消费日期外键, alias: [日期, 消费时间], sync: false}
@@ -61,7 +61,7 @@ metrics:
   - name: 消费次数
     description: 消费记录的数量，表示交易笔数。
     relevant_columns: [fact_consumption.consumption_id]
-    alias: [订单数, 交易笔数, 消费笔数]
+    alias: [消费次数, 交易笔数, 消费笔数]
   - name: 消费人数
     description: 发生过消费的去重学生人数。
     relevant_columns: [fact_consumption.student_id]

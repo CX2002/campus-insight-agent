@@ -42,17 +42,17 @@ async def add_vectors(client):
             models.PointStruct(
                 id=1,
                 vector=[0.05, 0.61, 0.76, 0.74],
-                payload={"name": "订单分析", "type": "report"},
+                payload={"name": "食堂消费分析", "type": "report"},
             ),
             models.PointStruct(
                 id=2,
                 vector=[0.19, 0.81, 0.75, 0.11],
-                payload={"name": "销量趋势", "type": "metric"},
+                payload={"name": "消费趋势", "type": "metric"},
             ),
             models.PointStruct(
                 id=3,
                 vector=[0.36, 0.55, 0.47, 0.94],
-                payload={"name": "区域销售额", "type": "dimension"},
+                payload={"name": "校区消费总额", "type": "dimension"},
             ),
         ],
     )

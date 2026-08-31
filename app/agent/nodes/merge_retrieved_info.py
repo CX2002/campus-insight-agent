@@ -64,7 +64,7 @@ async def merge_retrieved_info(
                     retrieved_column_infos_map[relevant_column] = column_info
 
         # 3. 把字段取值合并回字段 examples
-        # 字段取值召回命中的是 column_id + value，例如 dim_region.region_name.华北。
+        # 字段取值召回命中的是 column_id + value，例如 dim_canteen.campus.紫金港校区。
         # 把真实 value 放进字段 examples，可以帮助模型写出更接近真实数据的 where 条件。
         for retrieved_value_info in retrieved_value_infos:
             value = retrieved_value_info.value

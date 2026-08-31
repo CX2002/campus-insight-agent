@@ -15,6 +15,6 @@ class MetricInfo:
     id: str
     name: str
     description: str
-    # 指标依赖的底层字段列表，例如 GMV 依赖 fact_order.order_amount
+    # 指标依赖的底层字段列表，例如消费总额依赖 fact_consumption.amount
     relevant_columns: list[str]
     alias: list[str]

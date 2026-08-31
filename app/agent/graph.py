@@ -1,5 +1,5 @@
 """
-电商问数 Agent 图编排
+校园消费分析 Agent 图编排
 
 使用 LangGraph 把问数智能体的各个节点串成一条可观测的执行链路
 当前链路已经落地关键词抽取和多路召回，字段和指标走 Qdrant 向量检索，字段取值走 ES 全文检索
@@ -123,7 +123,7 @@ if __name__ == "__main__":
             value_es_repository = ValueESRepository(es_client_manager.client)
 
             # 当前只需要传入原始问题，后续节点会逐步写回召回、过滤和额外上下文结果
-            state = DataAgentState(query="统计华北地区的销售总额")
+            state = DataAgentState(query="统计紫金港校区的消费总额")
             context = DataAgentContext(
                 column_qdrant_repository=column_qdrant_repository,
                 embedding_client=embedding_client_manager.client,
