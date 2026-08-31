@@ -16,6 +16,10 @@
 
 项目完整实现了“自然语言问题 → 元数据检索 → 多阶段 Agent 推理 → SQL 生成与修正 → 数据库执行 → 流式结果展示”的工程链路。
 
+![校园消费智能分析 Agent 界面概览](docs/images/campus-insight-overview.svg)
+
+![Campus Insight Agent 系统架构](docs/images/campus-insight-architecture.svg)
+
 ## 核心功能
 
 - 自然语言查询校园消费数据
@@ -164,4 +168,3 @@ campus-insight-agent/
 ## 开源说明
 
 本项目是在开源问数 Agent 工程基础上进行的校园消费场景改造与个人项目化整理，保留 MIT License，并对业务数据、元数据、界面、项目命名和文档进行了重新设计。
-
