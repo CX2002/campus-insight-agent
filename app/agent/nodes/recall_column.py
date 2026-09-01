@@ -45,11 +45,12 @@ async def recall_column(state: DataAgentState, runtime: Runtime[DataAgentContext
 
         result = await chain.ainvoke({"query": query})
 
-        # 原始关键词和 LLM 扩展词一起参与召回；set 去重，避免重复请求同一关键词
-        keywords = set(keywords + result)
+        # 保留稳定顺序，避免 set 迭代顺序导致评测结果抖动
+        keywords = list(dict.fromkeys(keywords + result))
 
         # 用字段 id 做唯一键，因为多个关键词、同一字段的多个向量点都可能命中同一个字段
         column_info_map: dict[str, ColumnInfo] = {}
+        hit_counts: dict[str, int] = {}
         for keyword in keywords:
             # 查询词必须先转成向量，才能和第 9 章写入 Qdrant 的字段向量做相似度检索
             embedding = await embedding_client.aembed_query(keyword)
@@ -57,13 +58,22 @@ async def recall_column(state: DataAgentState, runtime: Runtime[DataAgentContext
                 ColumnInfo
             ] = await column_qdrant_repository.search(embedding)
             for column_info in current_column_infos:
-                if column_info.id not in column_info_map:
-                    column_info_map[column_info.id] = column_info
+                column_info_map.setdefault(column_info.id, column_info)
+                hit_counts[column_info.id] = hit_counts.get(column_info.id, 0) + 1
 
         # 写回 state 的是去重后的 ColumnInfo 列表，不暴露 Qdrant 原始 point 结构
-        retrieved_column_infos: list[ColumnInfo] = list(column_info_map.values())
+        retrieved_column_infos: list[ColumnInfo] = sorted(
+            column_info_map.values(),
+            key=lambda column: (-hit_counts.get(column.id, 0), column.id),
+        )
 
-        writer({"type": "progress", "step": step, "status": "success"})
+        # 评测和链路观测只暴露字段 id，不把完整元数据塞进 SSE
+        writer({
+            "type": "progress",
+            "step": step,
+            "status": "success",
+            "retrieved_ids": [column.id for column in retrieved_column_infos[:5]],
+        })
         return {"retrieved_column_infos": retrieved_column_infos}
     except Exception as e:
         logger.error(f"{step} failed: {e}")

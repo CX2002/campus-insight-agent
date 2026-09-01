@@ -46,6 +46,7 @@ speed-measure-plugin*.json
 # Misc (build / logs)
 /.sass-cache
 /logs/
+eval/evaluation_console.log
 /connect.lock
 /coverage
 /libpeerconnection.log

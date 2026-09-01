@@ -153,3 +153,18 @@ campus-insight-agent/
 ├── main.py              # FastAPI 应用入口
 └── pyproject.toml       # Python 项目依赖
 ```
+
+## 评测体系
+
+项目内置一组校园消费问题评测集（`eval/questions.json`），使用标准 SQL 在本地数仓生成基准结果，再运行完整 Agent 流程，报告两个核心指标：
+
+- 端到端结果正确率：Agent 返回结果与基准结果一致的问题比例
+- 字段 MRR：第一个必要字段在完整召回结果中的排名质量
+
+确保 Docker 服务和元数据索引已启动后执行：
+
+```bash
+python -m eval.run_evaluation
+```
+
+报告会写入 `eval/latest_result.json`。评测脚本只读取本地测试数据和服务，不会修改业务表。

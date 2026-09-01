@@ -1,0 +1,82 @@
+{
+  "total_cases": 15,
+  "rag_mrr": 0.88,
+  "end_to_end_result_accuracy": 0.8667,
+  "details": [
+    {
+      "question": "统计 2025 年第一季度各校区的消费总额",
+      "result_correct": true,
+      "mrr": 1.0
+    },
+    {
+      "question": "统计 2025 年第一季度各食堂的消费次数",
+      "result_correct": true,
+      "mrr": 0.2
+    },
+    {
+      "question": "统计 2025 年 3 月各餐次的消费总额",
+      "result_correct": true,
+      "mrr": 1.0
+    },
+    {
+      "question": "按学院统计 2025 年第一季度的人均消费",
+      "result_correct": false,
+      "mrr": 1.0
+    },
+    {
+      "question": "查询紫金港校区消费总额最高的前 5 个档口",
+      "result_correct": true,
+      "mrr": 1.0
+    },
+    {
+      "question": "比较本科生和研究生的消费次数",
+      "result_correct": true,
+      "mrr": 1.0
+    },
+    {
+      "question": "统计各校区的消费人数",
+      "result_correct": true,
+      "mrr": 0.0
+    },
+    {
+      "question": "统计不同支付方式的消费金额",
+      "result_correct": true,
+      "mrr": 1.0
+    },
+    {
+      "question": "统计各食堂午餐消费次数",
+      "result_correct": true,
+      "mrr": 1.0
+    },
+    {
+      "question": "统计各年级的人均消费",
+      "result_correct": true,
+      "mrr": 1.0
+    },
+    {
+      "question": "查询消费金额最高的 10 个学生",
+      "result_correct": false,
+      "mrr": 1.0
+    },
+    {
+      "question": "统计各菜品类别的消费份数",
+      "result_correct": true,
+      "mrr": 1.0
+    },
+    {
+      "question": "统计退款记录数量",
+      "result_correct": true,
+      "mrr": 1.0
+    },
+    {
+      "question": "统计各校区的平均客单价",
+      "result_correct": true,
+      "mrr": 1.0
+    },
+    {
+      "question": "统计 2025 年各月份消费总额",
+      "result_correct": true,
+      "mrr": 1.0
+    }
+  ]
+}
